@@ -14,6 +14,9 @@ def normalizar_texto(texto):
 
     texto = str(texto).strip().upper()
 
+    if not texto:
+        return ""
+
     texto = unicodedata.normalize(
         "NFKD",
         texto
@@ -40,291 +43,347 @@ def normalizar_texto(texto):
 
 def limpar_referencia(referencia):
 
-    if pd.isna(referencia):
-        return ""
-
-    referencia = str(referencia).strip()
-
-    referencia = re.sub(
-        r"\s+",
-        " ",
+    referencia = normalizar_texto(
         referencia
     )
 
-    return referencia
+    if not referencia:
+        return ""
+
+    # Remove espaços desnecessários ao redor
+    # de separadores de múltiplas referências.
+
+    referencia = re.sub(
+        r"\s*/\s*",
+        " / ",
+        referencia
+    )
+
+    referencia = re.sub(
+        r"\s*;\s*",
+        " / ",
+        referencia
+    )
+
+    return referencia.strip()
 
 
 # =========================================================
-# EXTRAI REFERÊNCIA DA DESCRIÇÃO
+# EXTRAI REFERÊNCIA
 # =========================================================
 
-def extrair_referencia(descricao):
+def extrair_referencia(texto):
+    """
+    Extrai a referência diretamente da descrição.
 
-    if pd.isna(descricao):
+    Exemplos:
+
+        [01002395] OLEO MOTOR
+            -> 01002395
+
+        [1080302003 / 0100207] OLEO
+            -> 1080302003 / 0100207
+
+        01002395 - OLEO MOTOR
+            -> 01002395
+
+        OLEO MOTOR 15W40
+            -> OLEO MOTOR 15W40
+
+    Mantém zeros à esquerda e múltiplas referências.
+    """
+
+    texto = normalizar_texto(
+        texto
+    )
+
+    if not texto:
         return ""
 
-    descricao = str(
-        descricao
-    ).strip()
 
-    if not descricao:
-        return ""
-
-    # -----------------------------------------------------
-    # PROCURA REFERÊNCIAS DENTRO DE [ ]
-    # -----------------------------------------------------
+    # -------------------------------------------------
+    # 1. PROCURA REFERÊNCIA ENTRE [ ]
+    # -------------------------------------------------
 
     encontrados = re.findall(
         r"\[([^\]]+)\]",
-        descricao
+        texto
     )
 
-    if encontrados:
+    referencias = []
 
-        referencias = []
 
-        for encontrado in encontrados:
+    for encontrado in encontrados:
 
-            partes = re.split(
-                r"[/;,]+",
-                encontrado
+        partes = re.split(
+            r"[/;,]+",
+            encontrado
+        )
+
+        for parte in partes:
+
+            parte = limpar_referencia(
+                parte
             )
 
-            for parte in partes:
+            if (
+                parte
+                and parte not in referencias
+            ):
 
-                parte = limpar_referencia(
+                referencias.append(
                     parte
                 )
 
-                if parte:
-                    referencias.append(
-                        parte
-                    )
 
-        if referencias:
-            return " / ".join(
-                referencias
-            )
+    if referencias:
 
-    # -----------------------------------------------------
-    # REFERÊNCIA ANTES DE " - "
-    # -----------------------------------------------------
+        return " / ".join(
+            referencias
+        )
 
-    if " - " in descricao:
 
-        referencia = descricao.split(
+    # -------------------------------------------------
+    # 2. PROCURA REFERÊNCIA ANTES DE " - "
+    # -------------------------------------------------
+
+    if " - " in texto:
+
+        primeira_parte = texto.split(
             " - ",
             1
         )[0].strip()
 
-        referencia = limpar_referencia(
-            referencia
+
+        partes = re.split(
+            r"[/;,]+",
+            primeira_parte
         )
 
-        if referencia:
-            return referencia
 
-    # -----------------------------------------------------
-    # SE NÃO ENCONTROU, USA A DESCRIÇÃO NORMALIZADA
-    # -----------------------------------------------------
+        for parte in partes:
 
-    return normalizar_texto(
-        descricao
-    )
+            parte = limpar_referencia(
+                parte
+            )
+
+            if (
+                parte
+                and parte not in referencias
+            ):
+
+                referencias.append(
+                    parte
+                )
 
 
-# =========================================================
-# ENCONTRA COLUNA
-# =========================================================
+        if referencias:
 
-def localizar_coluna(
-    df,
-    nomes
-):
+            return " / ".join(
+                referencias
+            )
 
-    nomes_normalizados = [
-        normalizar_texto(nome)
-        for nome in nomes
-    ]
 
-    for coluna in df.columns:
+    # -------------------------------------------------
+    # 3. NÃO EXISTE REFERÊNCIA SEPARADA
+    # -------------------------------------------------
 
-        coluna_normalizada = normalizar_texto(
-            coluna
-        )
+    # Nesse caso mantém a descrição completa.
+    # O comparador poderá tentar localizar
+    # a descrição quando não houver código explícito.
 
-        if coluna_normalizada in nomes_normalizados:
-            return coluna
-
-    return None
+    return texto
 
 
 # =========================================================
-# LÊ O PEDIDO
+# LÊ PEDIDO
 # =========================================================
 
-def ler_pedido(
-    caminho
-):
+def ler_pedido(caminho_arquivo):
+    """
+    Lê o arquivo Excel do pedido.
+
+    Identifica automaticamente:
+
+        Código
+        Descrição
+        Marca
+        Quantidade
+
+    A referência é extraída da coluna Descrição.
+    """
 
     try:
 
         df = pd.read_excel(
-            caminho
+            caminho_arquivo
         )
 
     except Exception as erro:
 
         raise Exception(
-            f"ERRO AO LER O PEDIDO: {erro}"
+            f"Não foi possível ler o arquivo do pedido: {erro}"
         )
+
+
+    # -------------------------------------------------
+    # VERIFICA SE ESTÁ VAZIO
+    # -------------------------------------------------
 
     if df.empty:
 
         raise Exception(
-            "A planilha do pedido está vazia."
+            "O arquivo do pedido está vazio."
         )
 
-    # =====================================================
-    # LOCALIZA AS COLUNAS
-    # =====================================================
 
-    coluna_codigo = localizar_coluna(
-        df,
-        [
-            "Código",
-            "Codigo",
-            "Cód.",
-            "Cod.",
-            "Código do Produto",
-            "Codigo do Produto"
-        ]
-    )
+    # -------------------------------------------------
+    # IDENTIFICA AS COLUNAS
+    # -------------------------------------------------
 
-    coluna_descricao = localizar_coluna(
-        df,
-        [
-            "Descrição",
-            "Descricao",
-            "Descrição do Produto",
-            "Descricao do Produto",
-            "Produto",
-            "Item"
-        ]
-    )
+    colunas = {}
 
-    # -----------------------------------------------------
-    # NOSSA MARCA
-    #
-    # A planilha do pedido utiliza exatamente:
-    #
-    # Marca (Se for Marca Específica)
-    #
-    # Essa informação será levada para a coluna
-    # "Marca" do resultado do SINC.
-    # -----------------------------------------------------
 
-    coluna_marca = localizar_coluna(
-        df,
-        [
-            "Marca (Se for Marca Específica)",
-            "Marca (Se for Marca Especifica)"
-        ]
-    )
+    for coluna in df.columns:
 
-    coluna_quantidade = localizar_coluna(
-        df,
-        [
-            "Quantidade",
-            "Qtd",
-            "Qtde",
-            "Quant."
-        ]
-    )
-
-    # =====================================================
-    # VALIDA AS COLUNAS
-    # =====================================================
-
-    colunas_faltando = []
-
-    if coluna_codigo is None:
-        colunas_faltando.append(
-            "Código"
+        nome = normalizar_texto(
+            coluna
         )
 
-    if coluna_descricao is None:
-        colunas_faltando.append(
-            "Descrição"
-        )
 
-    if coluna_marca is None:
-        colunas_faltando.append(
-            "Marca (Se for Marca Específica)"
-        )
+        # Código
 
-    if coluna_quantidade is None:
-        colunas_faltando.append(
-            "Quantidade"
-        )
+        if (
+            "CODIGO" in nome
+            or "COD" == nome
+            or "CÓDIGO" in str(coluna).upper()
+        ):
 
-    if colunas_faltando:
+            colunas["codigo"] = coluna
+
+
+        # Descrição
+
+        elif (
+            "DESCRICAO" in nome
+            or "PRODUTO" in nome
+            or "ITEM" in nome
+        ):
+
+            colunas["descricao"] = coluna
+
+
+        # Marca
+
+        elif "MARCA" in nome:
+
+            colunas["marca"] = coluna
+
+
+        # Quantidade
+
+        elif (
+            "QTD" in nome
+            or "QUANT" in nome
+            or "QUANTIDADE" in nome
+        ):
+
+            colunas["quantidade"] = coluna
+
+
+    # -------------------------------------------------
+    # COLUNAS OBRIGATÓRIAS
+    # -------------------------------------------------
+
+    obrigatorias = [
+        "codigo",
+        "descricao",
+        "marca",
+        "quantidade"
+    ]
+
+
+    campos_faltantes = [
+        campo
+        for campo in obrigatorias
+        if campo not in colunas
+    ]
+
+
+    if campos_faltantes:
 
         raise Exception(
-            "Não foi possível localizar as seguintes "
-            "colunas no pedido: "
+            "Não encontrei no pedido as seguintes "
+            "colunas: "
             + ", ".join(
-                colunas_faltando
+                campos_faltantes
             )
         )
 
-    # =====================================================
-    # CRIA O DATAFRAME PADRONIZADO
-    # =====================================================
 
-    resultado = pd.DataFrame()
+    # -------------------------------------------------
+    # SELECIONA AS COLUNAS
+    # -------------------------------------------------
 
-    resultado["Código"] = df[
-        coluna_codigo
+    pedido = df[
+        [
+            colunas["codigo"],
+            colunas["descricao"],
+            colunas["marca"],
+            colunas["quantidade"]
+        ]
+    ].copy()
+
+
+    # -------------------------------------------------
+    # PADRONIZA NOMES
+    # -------------------------------------------------
+
+    pedido.columns = [
+        "Código",
+        "Descrição",
+        "Marca",
+        "Qtd"
     ]
 
-    resultado["Descrição"] = df[
-        coluna_descricao
-    ]
 
-    # -----------------------------------------------------
-    # AQUI ESTÁ A CORREÇÃO
-    #
-    # Pega a nossa marca diretamente da coluna:
-    #
-    # Marca (Se for Marca Específica)
-    #
-    # e coloca na coluna "Marca".
-    # -----------------------------------------------------
+    # -------------------------------------------------
+    # LIMPA CAMPOS
+    # -------------------------------------------------
 
-    resultado["Marca"] = df[
-        coluna_marca
-    ]
-
-    resultado["Qtd"] = df[
-        coluna_quantidade
-    ]
-
-    # =====================================================
-    # EXTRAI REFERÊNCIA
-    # =====================================================
-
-    resultado["Referência"] = resultado[
-        "Descrição"
-    ].apply(
-        extrair_referencia
+    pedido["Descrição"] = (
+        pedido["Descrição"]
+        .fillna("")
+        .astype(str)
+        .str.strip()
     )
 
-    # =====================================================
-    # ORGANIZA AS COLUNAS
-    # =====================================================
 
-    resultado = resultado[
+    pedido["Marca"] = (
+        pedido["Marca"]
+        .fillna("")
+        .astype(str)
+        .str.strip()
+    )
+
+
+    # -------------------------------------------------
+    # EXTRAI A REFERÊNCIA
+    # -------------------------------------------------
+
+    pedido["Referência"] = (
+        pedido["Descrição"]
+        .apply(
+            extrair_referencia
+        )
+    )
+
+
+    # -------------------------------------------------
+    # ORGANIZA AS COLUNAS
+    # -------------------------------------------------
+
+    pedido = pedido[
         [
             "Código",
             "Referência",
@@ -334,57 +393,16 @@ def ler_pedido(
         ]
     ]
 
-    # =====================================================
-    # LIMPA VALORES
-    # =====================================================
 
-    resultado["Código"] = resultado[
-        "Código"
-    ].apply(
-        lambda valor:
-        ""
-        if pd.isna(valor)
-        else str(valor).strip()
-    )
+    # -------------------------------------------------
+    # SUBSTITUI NULOS
+    # -------------------------------------------------
 
-    resultado["Descrição"] = resultado[
-        "Descrição"
-    ].apply(
-        lambda valor:
-        ""
-        if pd.isna(valor)
-        else str(valor).strip()
-    )
+    pedido = pedido.fillna("")
 
-    resultado["Marca"] = resultado[
-        "Marca"
-    ].apply(
-        lambda valor:
-        ""
-        if pd.isna(valor)
-        else str(valor).strip()
-    )
 
-    # =====================================================
-    # REMOVE LINHAS COMPLETAMENTE VAZIAS
-    # =====================================================
+    # -------------------------------------------------
+    # RETORNA
+    # -------------------------------------------------
 
-    resultado = resultado[
-        (
-            resultado["Código"].astype(str).str.strip() != ""
-        )
-        |
-        (
-            resultado["Descrição"].astype(str).str.strip() != ""
-        )
-        |
-        (
-            resultado["Marca"].astype(str).str.strip() != ""
-        )
-    ]
-
-    resultado = resultado.reset_index(
-        drop=True
-    )
-
-    return resultado
+    return pedido
