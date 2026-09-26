@@ -1,0 +1,2076 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>SINC 2.0 - Resultado</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+
+            --azul-escuro: #071a33;
+            --azul: #0d47a1;
+            --azul-medio: #1565c0;
+            --azul-claro: #1976d2;
+
+            --verde: #16a34a;
+            --verde-claro: #dcfce7;
+
+            --branco: #ffffff;
+
+            --fundo: #f3f6fa;
+            --fundo-card: #ffffff;
+
+            --texto: #172033;
+            --texto-secundario: #667085;
+
+            --borda: #e4e9f0;
+
+            --sombra:
+                0 12px 35px rgba(15, 35, 65, 0.10);
+
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+
+            margin: 0;
+
+            min-height: 100vh;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at 10% 0%,
+                    rgba(25, 118, 210, 0.10),
+                    transparent 28%
+                ),
+                linear-gradient(
+                    180deg,
+                    #f6f9fc 0%,
+                    #eef3f8 100%
+                );
+
+            color: var(--texto);
+
+        }
+
+        /* =====================================================
+           TOPO
+        ===================================================== */
+
+        .topo {
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 100;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #06162c,
+                    #0d47a1
+                );
+
+            color: white;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.10);
+
+            box-shadow:
+                0 5px 25px
+                rgba(0,0,0,0.18);
+
+        }
+
+        .topo-conteudo {
+
+            max-width: 1500px;
+
+            margin: 0 auto;
+
+            padding:
+                16px 24px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+        }
+
+        .marca-sistema {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            min-width: 0;
+
+        }
+
+        .logo {
+
+            width: 46px;
+
+            height: 46px;
+
+            flex-shrink: 0;
+
+            border-radius: 13px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #42a5f5,
+                    #1976d2
+                );
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 20px;
+
+            font-weight: 900;
+
+            box-shadow:
+                0 7px 20px
+                rgba(0,0,0,0.22);
+
+        }
+
+        .nome-sistema {
+
+            min-width: 0;
+
+        }
+
+        .nome-sistema strong {
+
+            display: block;
+
+            font-size: 16px;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+        }
+
+        .nome-sistema span {
+
+            display: block;
+
+            margin-top: 3px;
+
+            color:
+                rgba(255,255,255,0.60);
+
+            font-size: 10px;
+
+            letter-spacing: 1.4px;
+
+            text-transform: uppercase;
+
+        }
+
+        .topo-status {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding:
+                8px 13px;
+
+            border-radius: 30px;
+
+            background:
+                rgba(255,255,255,0.08);
+
+            border:
+                1px solid
+                rgba(255,255,255,0.10);
+
+            font-size: 11px;
+
+            color:
+                rgba(255,255,255,0.76);
+
+            white-space: nowrap;
+
+        }
+
+        .status-ponto {
+
+            width: 7px;
+
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: #4ade80;
+
+            box-shadow:
+                0 0 9px
+                rgba(74,222,128,0.85);
+
+        }
+
+        /* =====================================================
+           CONTAINER
+        ===================================================== */
+
+        .container {
+
+            width: 100%;
+
+            max-width: 1500px;
+
+            margin: 0 auto;
+
+            padding:
+                30px 24px 55px;
+
+        }
+
+        /* =====================================================
+           CABEÇALHO DO RESULTADO
+        ===================================================== */
+
+        .cabecalho-resultado {
+
+            display: flex;
+
+            align-items: flex-end;
+
+            justify-content: space-between;
+
+            gap: 25px;
+
+            margin-bottom: 25px;
+
+        }
+
+        .titulo-area {
+
+            min-width: 0;
+
+        }
+
+        .etiqueta {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding:
+                6px 11px;
+
+            border-radius: 20px;
+
+            background:
+                #e8f1ff;
+
+            color:
+                var(--azul);
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            letter-spacing: 1px;
+
+            text-transform: uppercase;
+
+            margin-bottom: 10px;
+
+        }
+
+        .etiqueta::before {
+
+            content: "";
+
+            width: 6px;
+
+            height: 6px;
+
+            border-radius: 50%;
+
+            background:
+                var(--azul-claro);
+
+        }
+
+        h1 {
+
+            margin: 0;
+
+            font-size:
+                clamp(28px, 4vw, 42px);
+
+            line-height: 1.08;
+
+            letter-spacing: -1.5px;
+
+            color:
+                var(--azul-escuro);
+
+        }
+
+        .subtitulo {
+
+            margin:
+                9px 0 0;
+
+            color:
+                var(--texto-secundario);
+
+            font-size: 14px;
+
+            line-height: 1.5;
+
+        }
+
+        /* =====================================================
+           BOTÕES
+        ===================================================== */
+
+        .acoes {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            justify-content: flex-end;
+
+            gap: 9px;
+
+        }
+
+        .botao {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 8px;
+
+            min-height: 42px;
+
+            padding:
+                0 16px;
+
+            border-radius: 10px;
+
+            border: 1px solid var(--borda);
+
+            background: white;
+
+            color: var(--texto);
+
+            text-decoration: none;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.18s ease,
+                box-shadow 0.18s ease,
+                border-color 0.18s ease;
+
+            box-shadow:
+                0 3px 10px
+                rgba(15,35,65,0.05);
+
+        }
+
+        .botao:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 7px 17px
+                rgba(15,35,65,0.10);
+
+            border-color:
+                #c9d5e4;
+
+        }
+
+        .botao-principal {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--azul),
+                    var(--azul-medio)
+                );
+
+            border-color:
+                var(--azul);
+
+            color: white;
+
+            box-shadow:
+                0 7px 18px
+                rgba(13,71,161,0.23);
+
+        }
+
+        .botao-principal:hover {
+
+            border-color:
+                var(--azul-claro);
+
+        }
+
+        .botao-verde {
+
+            background:
+                #f0fdf4;
+
+            border-color:
+                #bbf7d0;
+
+            color:
+                #15803d;
+
+        }
+
+        /* =====================================================
+           CARDS DE RESUMO
+        ===================================================== */
+
+        .indicadores {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 16px;
+
+            margin-bottom: 24px;
+
+        }
+
+        .indicador {
+
+            position: relative;
+
+            overflow: hidden;
+
+            background:
+                var(--fundo-card);
+
+            border:
+                1px solid var(--borda);
+
+            border-radius: 16px;
+
+            padding:
+                21px 22px;
+
+            box-shadow:
+                var(--sombra);
+
+        }
+
+        .indicador::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 100px;
+
+            height: 100px;
+
+            border-radius: 50%;
+
+            right: -50px;
+
+            top: -50px;
+
+            background:
+                rgba(25,118,210,0.05);
+
+        }
+
+        .indicador.economia {
+
+            border-color:
+                #bbf7d0;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ffffff,
+                    #f0fdf4
+                );
+
+        }
+
+        .indicador.economia::after {
+
+            background:
+                rgba(22,163,74,0.07);
+
+        }
+
+        .indicador-label {
+
+            display: block;
+
+            color:
+                var(--texto-secundario);
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            letter-spacing: 1px;
+
+            text-transform: uppercase;
+
+            margin-bottom: 8px;
+
+        }
+
+        .indicador-valor {
+
+            display: block;
+
+            color:
+                var(--azul-escuro);
+
+            font-size: 25px;
+
+            font-weight: 900;
+
+            letter-spacing: -0.5px;
+
+        }
+
+        .economia
+        .indicador-valor {
+
+            color:
+                #15803d;
+
+        }
+
+        .indicador-info {
+
+            display: block;
+
+            margin-top: 5px;
+
+            color:
+                #98a2b3;
+
+            font-size: 10px;
+
+        }
+
+        /* =====================================================
+           RESUMO DOS FORNECEDORES
+        ===================================================== */
+
+        .card {
+
+            background:
+                var(--fundo-card);
+
+            border:
+                1px solid var(--borda);
+
+            border-radius: 16px;
+
+            box-shadow:
+                var(--sombra);
+
+            overflow: hidden;
+
+            margin-bottom: 24px;
+
+        }
+
+        .card-cabecalho {
+
+            padding:
+                19px 22px;
+
+            border-bottom:
+                1px solid var(--borda);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+        }
+
+        .card-titulo {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+
+        }
+
+        .card-icone {
+
+            width: 34px;
+
+            height: 34px;
+
+            border-radius: 9px;
+
+            background:
+                #eaf2ff;
+
+            color:
+                var(--azul);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 15px;
+
+            font-weight: 900;
+
+        }
+
+        .card-titulo strong {
+
+            display: block;
+
+            font-size: 14px;
+
+            color:
+                var(--azul-escuro);
+
+        }
+
+        .card-titulo span {
+
+            display: block;
+
+            margin-top: 3px;
+
+            font-size: 10px;
+
+            color:
+                var(--texto-secundario);
+
+        }
+
+        /* =====================================================
+           TABELA RESUMO
+        ===================================================== */
+
+        .resumo-scroll {
+
+            width: 100%;
+
+            overflow-x: auto;
+
+        }
+
+        .tabela-resumo {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+        }
+
+        .tabela-resumo th {
+
+            background:
+                #f8fafc;
+
+            color:
+                #667085;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            letter-spacing: 0.6px;
+
+            text-transform: uppercase;
+
+            padding:
+                12px 18px;
+
+            text-align: left;
+
+            border-bottom:
+                1px solid var(--borda);
+
+        }
+
+        .tabela-resumo td {
+
+            padding:
+                13px 18px;
+
+            font-size: 13px;
+
+            border-bottom:
+                1px solid #edf0f4;
+
+        }
+
+        .tabela-resumo tr:last-child td {
+
+            border-bottom: none;
+
+        }
+
+        .fornecedor-nome {
+
+            font-weight: 700;
+
+            color:
+                var(--texto);
+
+        }
+
+        .valor-total {
+
+            font-weight: 800;
+
+            color:
+                var(--azul);
+
+            text-align: right;
+
+            white-space: nowrap;
+
+        }
+
+        .economia-linha td {
+
+            background:
+                #f0fdf4;
+
+            color:
+                #15803d;
+
+            font-weight: 800;
+
+        }
+
+        /* =====================================================
+           TABELA PRINCIPAL
+        ===================================================== */
+
+        .tabela-card {
+
+            margin-top: 24px;
+
+        }
+
+        .tabela-acoes {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            color:
+                var(--texto-secundario);
+
+            font-size: 10px;
+
+        }
+
+        .rolagem-info {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+        }
+
+        .rolagem-info::before {
+
+            content: "↔";
+
+            font-size: 15px;
+
+            color:
+                var(--azul-claro);
+
+        }
+
+        .tabela-wrapper {
+
+            width: 100%;
+
+            overflow-x: auto;
+
+            overflow-y: auto;
+
+            max-height:
+                calc(100vh - 260px);
+
+            position: relative;
+
+            border-bottom:
+                1px solid var(--borda);
+
+        }
+
+        .tabela-principal {
+
+            border-collapse: separate;
+
+            border-spacing: 0;
+
+            width: max-content;
+
+            min-width: 100%;
+
+            font-size: 12px;
+
+        }
+
+        .tabela-principal th {
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 10;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0b3d8e,
+                    #1565c0
+                );
+
+            color: white;
+
+            padding:
+                13px 12px;
+
+            text-align: center;
+
+            white-space: nowrap;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            letter-spacing: 0.4px;
+
+            border-right:
+                1px solid
+                rgba(255,255,255,0.12);
+
+        }
+
+        .tabela-principal td {
+
+            padding:
+                11px 12px;
+
+            background:
+                white;
+
+            border-right:
+                1px solid #edf0f4;
+
+            border-bottom:
+                1px solid #edf0f4;
+
+            white-space: nowrap;
+
+            vertical-align: middle;
+
+        }
+
+        .tabela-principal tbody tr:hover td {
+
+            background:
+                #f7faff;
+
+        }
+
+        /* =====================================================
+           PRIMEIRAS COLUNAS FIXAS
+        ===================================================== */
+
+        .tabela-principal th:nth-child(1),
+        .tabela-principal td:nth-child(1) {
+
+            position: sticky;
+
+            left: 0;
+
+            z-index: 12;
+
+        }
+
+        .tabela-principal th:nth-child(1) {
+
+            z-index: 16;
+
+        }
+
+        .tabela-principal td:nth-child(1) {
+
+            background:
+                white;
+
+            font-weight: 700;
+
+        }
+
+        .tabela-principal tbody tr:hover td:nth-child(1) {
+
+            background:
+                #f7faff;
+
+        }
+
+        /* =====================================================
+           COLUNAS DE IDENTIFICAÇÃO
+        ===================================================== */
+
+        .tabela-principal th:nth-child(2),
+        .tabela-principal td:nth-child(2) {
+
+            text-align: left;
+
+        }
+
+        .tabela-principal th:nth-child(3),
+        .tabela-principal td:nth-child(3) {
+
+            min-width: 260px;
+
+            text-align: left;
+
+        }
+
+        .tabela-principal th:nth-child(4),
+        .tabela-principal td:nth-child(4) {
+
+            text-align: center;
+
+        }
+
+        .tabela-principal th:nth-child(5),
+        .tabela-principal td:nth-child(5) {
+
+            text-align: center;
+
+        }
+
+        /* =====================================================
+           PREÇOS
+        ===================================================== */
+
+        .preco {
+
+            font-weight: 700;
+
+            color:
+                #344054;
+
+            text-align: right;
+
+        }
+
+        .marca {
+
+            color:
+                #667085;
+
+            font-size: 10px;
+
+            text-align: center;
+
+        }
+
+        .vazio {
+
+            color:
+                #c3c9d2;
+
+            text-align: center;
+
+        }
+
+        .menor {
+
+            background:
+                #dcfce7 !important;
+
+            color:
+                #166534 !important;
+
+            font-weight: 900 !important;
+
+            box-shadow:
+                inset 0 0 0 1px
+                rgba(22,163,74,0.18);
+
+        }
+
+        .economia-celula {
+
+            background:
+                #f0fdf4 !important;
+
+            color:
+                #15803d !important;
+
+            font-weight: 900;
+
+            text-align: right;
+
+        }
+
+        /* =====================================================
+           RODAPÉ
+        ===================================================== */
+
+        .rodape {
+
+            text-align: center;
+
+            padding:
+                20px;
+
+            color:
+                #98a2b3;
+
+            font-size: 10px;
+
+        }
+
+        /* =====================================================
+           IMPRESSÃO
+        ===================================================== */
+
+        @media print {
+
+            body {
+
+                background: white;
+
+            }
+
+            .topo {
+
+                position: static;
+
+                box-shadow: none;
+
+            }
+
+            .acoes,
+            .tabela-acoes,
+            .rodape {
+
+                display: none !important;
+
+            }
+
+            .container {
+
+                max-width: none;
+
+                padding: 15px;
+
+            }
+
+            .card {
+
+                box-shadow: none;
+
+            }
+
+            .tabela-wrapper {
+
+                max-height: none;
+
+                overflow: visible;
+
+            }
+
+            .tabela-principal th {
+
+                position: static;
+
+            }
+
+            .tabela-principal th:nth-child(1),
+            .tabela-principal td:nth-child(1) {
+
+                position: static;
+
+            }
+
+        }
+
+        /* =====================================================
+           RESPONSIVO
+        ===================================================== */
+
+        @media (max-width: 900px) {
+
+            .topo-conteudo {
+
+                padding:
+                    13px 16px;
+
+            }
+
+            .topo-status {
+
+                display: none;
+
+            }
+
+            .container {
+
+                padding:
+                    22px 15px 40px;
+
+            }
+
+            .cabecalho-resultado {
+
+                align-items: flex-start;
+
+                flex-direction: column;
+
+            }
+
+            .acoes {
+
+                width: 100%;
+
+                justify-content: flex-start;
+
+            }
+
+            .botao {
+
+                flex: 1;
+
+                min-width: 145px;
+
+            }
+
+            .indicadores {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+            .card-cabecalho {
+
+                align-items: flex-start;
+
+                flex-direction: column;
+
+            }
+
+            .tabela-acoes {
+
+                width: 100%;
+
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .nome-sistema strong {
+
+                font-size: 13px;
+
+            }
+
+            .nome-sistema span {
+
+                font-size: 8px;
+
+            }
+
+            .logo {
+
+                width: 40px;
+
+                height: 40px;
+
+                border-radius: 11px;
+
+            }
+
+            h1 {
+
+                font-size: 29px;
+
+            }
+
+            .subtitulo {
+
+                font-size: 12px;
+
+            }
+
+            .acoes {
+
+                display: grid;
+
+                grid-template-columns:
+                    1fr 1fr;
+
+            }
+
+            .botao {
+
+                width: 100%;
+
+                min-width: 0;
+
+                padding:
+                    0 10px;
+
+                font-size: 11px;
+
+            }
+
+            .indicador {
+
+                padding:
+                    18px;
+
+            }
+
+            .indicador-valor {
+
+                font-size: 22px;
+
+            }
+
+            .card-cabecalho {
+
+                padding:
+                    16px;
+
+            }
+
+            .tabela-principal {
+
+                font-size: 11px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         TOPO
+    ====================================================== -->
+
+    <header class="topo">
+
+        <div class="topo-conteudo">
+
+            <div class="marca-sistema">
+
+                <div class="logo">
+                    S
+                </div>
+
+                <div class="nome-sistema">
+
+                    <strong>
+                        Sistema Inteligente de Compras
+                    </strong>
+
+                    <span>
+                        SINC 2.0 • Resultado da análise
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="topo-status">
+
+                <span class="status-ponto"></span>
+
+                Comparação concluída
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         CONTEÚDO
+    ====================================================== -->
+
+    <main class="container">
+
+
+        <!-- =================================================
+             TÍTULO
+        ================================================== -->
+
+        <section class="cabecalho-resultado">
+
+            <div class="titulo-area">
+
+                <div class="etiqueta">
+                    Análise concluída
+                </div>
+
+                <h1>
+                    Resultado da comparação
+                </h1>
+
+                <p class="subtitulo">
+                    Confira os preços encontrados,
+                    os valores por fornecedor e a economia
+                    identificada nesta análise.
+                </p>
+
+            </div>
+
+
+            <div class="acoes">
+
+                <a
+                    href="/pedido"
+                    class="botao"
+                >
+                    ← Nova análise
+                </a>
+
+
+                <button
+                    type="button"
+                    class="botao"
+                    onclick="window.print()"
+                >
+                    🖨 Imprimir
+                </button>
+
+
+                <a
+                    href="/exportar"
+                    class="botao botao-verde"
+                >
+                    ↓ Exportar Excel
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             INDICADORES
+        ================================================== -->
+
+        <section class="indicadores">
+
+
+            <div class="indicador">
+
+                <span class="indicador-label">
+                    Fornecedores analisados
+                </span>
+
+                <span
+                    class="indicador-valor"
+                    id="quantidadeFornecedores"
+                >
+                    0
+                </span>
+
+                <span class="indicador-info">
+                    Empresas presentes na comparação
+                </span>
+
+            </div>
+
+
+            <div class="indicador">
+
+                <span class="indicador-label">
+                    Itens comparados
+                </span>
+
+                <span
+                    class="indicador-valor"
+                    id="quantidadeItens"
+                >
+                    {{ tabelas|length }}
+                </span>
+
+                <span class="indicador-info">
+                    Produtos encontrados no pedido
+                </span>
+
+            </div>
+
+
+            <div class="indicador economia">
+
+                <span class="indicador-label">
+                    Economia total
+                </span>
+
+                <span
+                    class="indicador-valor"
+                    id="economiaIndicador"
+                >
+                    R$ {{ "%.2f"|format(economia|float) }}
+                </span>
+
+                <span class="indicador-info">
+                    Diferença entre maior e menor preço válido
+                </span>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================================
+             RESUMO DOS FORNECEDORES
+        ================================================== -->
+
+        <section class="card">
+
+            <div class="card-cabecalho">
+
+                <div class="card-titulo">
+
+                    <div class="card-icone">
+                        $
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Resumo por fornecedor
+                        </strong>
+
+                        <span>
+                            Total calculado considerando os menores preços encontrados
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="resumo-scroll">
+
+                <table class="tabela-resumo">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Fornecedor
+                            </th>
+
+                            <th style="text-align:right;">
+                                Total comprado
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for fornecedor, total in totais.items() %}
+
+                        <tr>
+
+                            <td>
+
+                                <span class="fornecedor-nome">
+                                    {{ fornecedor }}
+                                </span>
+
+                            </td>
+
+                            <td class="valor-total">
+
+                                R$
+                                {{ "%.2f"|format(total|float) }}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+
+                        <tr class="economia-linha">
+
+                            <td>
+                                ECONOMIA TOTAL
+                            </td>
+
+                            <td
+                                style="text-align:right;"
+                            >
+                                R$
+                                {{ "%.2f"|format(economia|float) }}
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             COMPARAÇÃO COMPLETA
+        ================================================== -->
+
+        <section class="card tabela-card">
+
+
+            <div class="card-cabecalho">
+
+                <div class="card-titulo">
+
+                    <div class="card-icone">
+                        #
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Comparação completa
+                        </strong>
+
+                        <span>
+                            O menor preço válido de cada item é destacado em verde
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="tabela-acoes">
+
+                    <span class="rolagem-info">
+                        Deslize horizontalmente para visualizar todos os fornecedores
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="tabela-wrapper">
+
+                <table
+                    class="tabela-principal"
+                    id="tabelaComparacao"
+                >
+
+                    <thead>
+
+                        <tr>
+
+                            {% for coluna in colunas %}
+
+                            <th>
+                                {{ coluna }}
+                            </th>
+
+                            {% endfor %}
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for linha in tabelas %}
+
+                        <tr>
+
+                            {% for coluna in colunas %}
+
+                                {% set valor = linha[coluna] %}
+
+                                {% if valor is none %}
+
+                                    <td class="vazio">
+                                        —
+                                    </td>
+
+                                {% elif valor == "" %}
+
+                                    <td class="vazio">
+                                        —
+                                    </td>
+
+                                {% elif coluna == "Economia" %}
+
+                                    <td class="economia-celula">
+
+                                        R$
+                                        {{ "%.2f"|format(valor|float) }}
+
+                                    </td>
+
+                                {% elif "Marca Cotada" in coluna %}
+
+                                    <td class="marca">
+
+                                        {{ valor }}
+
+                                    </td>
+
+                                {% elif coluna in ["Código", "Referência", "Descrição", "Marca", "Qtd"] %}
+
+                                    <td>
+
+                                        {{ valor }}
+
+                                    </td>
+
+                                {% else %}
+
+                                    <td
+                                        class="preco"
+                                        data-preco="1"
+                                    >
+
+                                        R$
+                                        {{ "%.2f"|format(valor|float) }}
+
+                                    </td>
+
+                                {% endif %}
+
+                            {% endfor %}
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- =====================================================
+         RODAPÉ
+    ====================================================== -->
+
+    <footer class="rodape">
+
+        Sistema Inteligente de Compras
+        &nbsp;•&nbsp;
+        SINC 2.0
+        &nbsp;•&nbsp;
+        NUNEDIESEL
+        &nbsp;•&nbsp;
+        LBDIESEL
+
+    </footer>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                const tabela =
+                    document.getElementById(
+                        "tabelaComparacao"
+                    );
+
+                if (!tabela) {
+                    return;
+                }
+
+
+                const cabecalhos =
+                    tabela.querySelectorAll(
+                        "thead th"
+                    );
+
+                const linhas =
+                    tabela.querySelectorAll(
+                        "tbody tr"
+                    );
+
+
+                /*
+                 * Identifica as colunas de preço.
+                 *
+                 * Não considera:
+                 *
+                 * Código
+                 * Referência
+                 * Descrição
+                 * Marca
+                 * Qtd
+                 * Economia
+                 * Marca Cotada
+                 */
+
+                const colunasPreco = [];
+
+
+                const colunasFixas = [
+                    "Código",
+                    "Referência",
+                    "Descrição",
+                    "Marca",
+                    "Qtd",
+                    "Economia"
+                ];
+
+
+                cabecalhos.forEach(
+                    function (cabecalho, indice) {
+
+                        const nome =
+                            cabecalho.textContent
+                                .trim();
+
+
+                        if (!nome) {
+                            return;
+                        }
+
+
+                        if (
+                            nome.includes(
+                                "Marca Cotada"
+                            )
+                        ) {
+                            return;
+                        }
+
+
+                        if (
+                            colunasFixas.includes(
+                                nome
+                            )
+                        ) {
+                            return;
+                        }
+
+
+                        colunasPreco.push(
+                            indice
+                        );
+
+                    }
+                );
+
+
+                /*
+                 * Conta os fornecedores.
+                 */
+
+                const nomesFornecedores = [];
+
+
+                cabecalhos.forEach(
+                    function (cabecalho) {
+
+                        const nome =
+                            cabecalho.textContent
+                                .trim();
+
+
+                        if (
+                            nome &&
+                            !colunasFixas.includes(nome) &&
+                            !nome.includes(
+                                "Marca Cotada"
+                            ) &&
+                            nome !== "Economia"
+                        ) {
+
+                            if (
+                                !nomesFornecedores.includes(
+                                    nome
+                                )
+                            ) {
+
+                                nomesFornecedores.push(
+                                    nome
+                                );
+
+                            }
+
+                        }
+
+                    }
+                );
+
+
+                const contador =
+                    document.getElementById(
+                        "quantidadeFornecedores"
+                    );
+
+
+                if (contador) {
+
+                    contador.textContent =
+                        nomesFornecedores.length;
+
+                }
+
+
+                /*
+                 * Procura o menor preço de cada linha.
+                 */
+
+                linhas.forEach(
+                    function (linha) {
+
+                        const celulas =
+                            linha.querySelectorAll(
+                                "td"
+                            );
+
+
+                        const precos = [];
+
+
+                        colunasPreco.forEach(
+                            function (indice) {
+
+                                const celula =
+                                    celulas[indice];
+
+
+                                if (!celula) {
+                                    return;
+                                }
+
+
+                                const texto =
+                                    celula.textContent
+                                        .replace(
+                                            "R$",
+                                            ""
+                                        )
+                                        .replace(
+                                            /\./g,
+                                            ""
+                                        )
+                                        .replace(
+                                            ",",
+                                            "."
+                                        )
+                                        .trim();
+
+
+                                if (!texto) {
+                                    return;
+                                }
+
+
+                                const numero =
+                                    parseFloat(
+                                        texto
+                                    );
+
+
+                                if (
+                                    isNaN(numero) ||
+                                    numero <= 0
+                                ) {
+                                    return;
+                                }
+
+
+                                precos.push(
+                                    {
+                                        indice:
+                                            indice,
+
+                                        valor:
+                                            numero
+                                    }
+                                );
+
+                            }
+                        );
+
+
+                        if (
+                            precos.length === 0
+                        ) {
+                            return;
+                        }
+
+
+                        const menor =
+                            Math.min.apply(
+                                null,
+                                precos.map(
+                                    function (item) {
+                                        return item.valor;
+                                    }
+                                )
+                            );
+
+
+                        /*
+                         * Destaca todos os empates.
+                         */
+
+                        precos.forEach(
+                            function (item) {
+
+                                if (
+                                    Math.abs(
+                                        item.valor -
+                                        menor
+                                    ) < 0.000001
+                                ) {
+
+                                    const celula =
+                                        celulas[
+                                            item.indice
+                                        ];
+
+
+                                    if (celula) {
+
+                                        celula.classList.add(
+                                            "menor"
+                                        );
+
+                                    }
+
+                                }
+
+                            }
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+    </script>
+
+
+</body>
+
+</html>
