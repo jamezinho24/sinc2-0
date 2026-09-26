@@ -16,7 +16,12 @@ app = Flask(__name__)
 # CONFIGURAÇÕES
 # =========================================================
 
-UPLOAD_FOLDER = "uploads"
+# O filesystem da Vercel é somente leitura fora de /tmp.
+# Cada instância pode gravar arquivos temporários nesse diretório efêmero.
+UPLOAD_FOLDER = os.path.join(
+    tempfile.gettempdir(),
+    "sinc-uploads"
+)
 
 os.makedirs(
     UPLOAD_FOLDER,
