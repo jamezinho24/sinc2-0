@@ -518,12 +518,17 @@ def comparar(
             # PROCURA TODAS AS LINHAS DO FORNECEDOR
             # ---------------------------------------------
 
-            for indice, produto in df_fornecedor.iterrows():
+            # itertuples evita criar uma Series para cada linha. Em planilhas
+            # grandes, iterrows pode consumir memória suficiente para derrubar
+            # o worker do Render durante a comparação.
+            colunas_fornecedor = df_fornecedor.reindex(
+                columns=["Descrição", "Preço", "Marca Cotada"]
+            )
 
-                descricao_fornecedor = produto.get(
-                    "Descrição",
-                    ""
-                )
+            for indice, descricao_fornecedor, preco_bruto, marca_bruta in colunas_fornecedor.itertuples(
+                index=True,
+                name=None
+            ):
 
                 if not referencias_sao_iguais(
                     referencia,
@@ -533,10 +538,7 @@ def comparar(
                     continue
 
                 preco = converter_preco(
-                    produto.get(
-                        "Preço",
-                        ""
-                    )
+                    preco_bruto
                 )
 
                 # PREÇO ZERO / VAZIO / NEGATIVO
@@ -552,7 +554,7 @@ def comparar(
                 produtos_encontrados.append(
                     (
                         indice,
-                        produto,
+                        marca_bruta,
                         preco
                     )
                 )
@@ -586,17 +588,12 @@ def comparar(
 
                 for (
                     indice,
-                    produto,
+                    marca,
                     preco
                 ) in produtos_encontrados:
 
                     if preco != menor_preco_fornecedor:
                         continue
-
-                    marca = produto.get(
-                        "Marca Cotada",
-                        ""
-                    )
 
                     if pd.isna(marca):
                         marca = ""
