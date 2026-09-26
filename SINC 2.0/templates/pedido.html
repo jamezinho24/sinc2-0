@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>SINC 2.0 - Nova Análise</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #eef2f7;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #333;
+        }
+
+        .topo {
+            background: #0d47a1;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .caixa {
+            width: 800px;
+            max-width: calc(100% - 30px);
+            margin: 40px auto;
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .descricao {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-top: 25px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background: #fafafa;
+            cursor: pointer;
+        }
+
+        input[type="file"]:hover {
+            border-color: #1565c0;
+        }
+
+        input[type="file"]:focus {
+            outline: none;
+            border-color: #0d47a1;
+            box-shadow: 0 0 0 2px rgba(13, 71, 161, 0.15);
+        }
+
+        .botao {
+            width: 100%;
+            margin-top: 35px;
+            padding: 18px;
+            background: #0d47a1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition:
+                background 0.2s ease,
+                transform 0.1s ease;
+        }
+
+        .botao:hover {
+            background: #1565c0;
+        }
+
+        .botao:active {
+            background: #0b3d91;
+            transform: scale(0.99);
+        }
+
+        .botao:disabled {
+            background: #90a4ae;
+            cursor: not-allowed;
+        }
+
+        .voltar {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #0d47a1;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .voltar:hover {
+            text-decoration: underline;
+        }
+
+        .informacao {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #777;
+        }
+
+        @media (max-width: 600px) {
+            .topo {
+                font-size: 24px;
+                padding: 16px;
+            }
+
+            .caixa {
+                margin: 20px auto;
+                padding: 25px 20px;
+            }
+
+            .botao {
+                font-size: 17px;
+                padding: 15px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="topo">
+        SINC 2.0
+    </div>
+
+    <div class="caixa">
+
+        <h2>
+            Nova Comparação
+        </h2>
+
+        <p class="descricao">
+            Selecione o pedido exportado do Softcosmo
+            e as cotações recebidas dos fornecedores.
+        </p>
+
+        <form
+            action="/upload"
+            method="POST"
+            enctype="multipart/form-data"
+            id="formulario"
+        >
+
+            <label for="pedido">
+                Pedido exportado do Softcosmo
+            </label>
+
+            <input
+                type="file"
+                id="pedido"
+                name="pedido"
+                accept=".xlsx,.xls"
+                required
+            >
+
+            <div class="informacao">
+                Selecione um arquivo .xlsx ou .xls
+            </div>
+
+            <label for="cotacoes">
+                Cotações dos fornecedores
+            </label>
+
+            <input
+                type="file"
+                id="cotacoes"
+                name="cotacoes"
+                accept=".xlsx,.xls"
+                multiple
+                required
+            >
+
+            <div class="informacao">
+                Você pode selecionar várias cotações ao mesmo tempo.
+            </div>
+
+            <button
+                class="botao"
+                type="submit"
+                id="botaoComparar"
+            >
+                🚀 COMPARAR COTAÇÕES
+            </button>
+
+        </form>
+
+        <a
+            href="/"
+            class="voltar"
+        >
+            ← Voltar para o início
+        </a>
+
+    </div>
+
+    <script>
+        const formulario = document.getElementById(
+            "formulario"
+        );
+
+        const botao = document.getElementById(
+            "botaoComparar"
+        );
+
+        formulario.addEventListener(
+            "submit",
+            function () {
+
+                botao.disabled = true;
+
+                botao.textContent =
+                    "⏳ PROCESSANDO COTAÇÕES...";
+
+            }
+        );
+    </script>
+
+</body>
+
+</html>

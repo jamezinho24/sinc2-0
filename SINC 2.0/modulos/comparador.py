@@ -1,6 +1,8 @@
 import pandas as pd
 import re
 import os
+import unicodedata
+
 
 
 # =========================================================
@@ -40,6 +42,13 @@ def normalizar_texto(texto):
 
     texto = str(texto).strip().upper()
 
+    texto = unicodedata.normalize("NFKD", texto)
+    texto = "".join(
+        caractere
+        for caractere in texto
+        if not unicodedata.combining(caractere)
+    )
+
     texto = re.sub(
         r"\s+",
         " ",
@@ -47,6 +56,7 @@ def normalizar_texto(texto):
     )
 
     return texto.strip()
+
 
 
 # =========================================================
@@ -300,15 +310,13 @@ def converter_preco(valor):
     if valor == "":
         return None
 
-    valor = valor.replace(
-        "R$",
-        ""
-    )
+    valor = valor.upper().replace("R$", "")
+    valor = valor.replace(" ", "")
+    valor = re.sub(r"[^0-9,.-]", "", valor)
 
-    valor = valor.replace(
-        " ",
-        ""
-    )
+    if valor.count("-") > 0 and not valor.startswith("-"):
+        return None
+
 
     # -----------------------------------------------------
     # FORMATO BRASILEIRO
@@ -484,12 +492,16 @@ def comparar(
                 quantidade
             )
 
+            if pd.isna(quantidade) or quantidade < 0:
+                quantidade = 0.0
+
         except (
             ValueError,
             TypeError
         ):
 
             quantidade = 0.0
+
 
         # =================================================
         # GUARDA OS PREÇOS VÁLIDOS
