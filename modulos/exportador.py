@@ -78,7 +78,7 @@ def exportar_excel(
 
                 preenchimento_menor = PatternFill(
                     fill_type="solid",
-                    fgColor="47D359"
+                    fgColor="C8F7C5"
                 )
 
                 fonte_cabecalho = Font(
@@ -91,14 +91,30 @@ def exportar_excel(
                     bold=True
                 )
 
+                # =================================================
                 # CABEÇALHO
-                for celula in ws[1]:
-                    celula.fill = preenchimento_cabecalho
-                    celula.font = fonte_cabecalho
-                    celula.alignment = Alignment(horizontal="center")
+                # =================================================
 
-                # IDENTIFICA COLUNAS DE PREÇO
+                for celula in ws[1]:
+
+                    celula.fill = (
+                        preenchimento_cabecalho
+                    )
+
+                    celula.font = (
+                        fonte_cabecalho
+                    )
+
+                    celula.alignment = Alignment(
+                        horizontal="center"
+                    )
+
+                # =================================================
+                # IDENTIFICA AS COLUNAS DE PREÇO
+                # =================================================
+
                 colunas_preco = []
+
                 colunas_que_nao_sao_preco = {
                     "Código",
                     "Referência",
@@ -108,22 +124,56 @@ def exportar_excel(
                     "Economia"
                 }
 
-                for coluna in range(1, ws.max_column + 1):
-                    nome_coluna = ws.cell(row=1, column=coluna).value
+                for coluna in range(
+                    1,
+                    ws.max_column + 1
+                ):
+
+                    nome_coluna = ws.cell(
+                        row=1,
+                        column=coluna
+                    ).value
+
                     if not nome_coluna:
                         continue
-                    nome_coluna = str(nome_coluna).strip()
-                    if " Marca Cotada" in nome_coluna:
-                        continue
-                    if nome_coluna in colunas_que_nao_sao_preco:
-                        continue
-                    colunas_preco.append(coluna)
 
-                # PINTA MENOR PREÇO DE CADA ITEM
-                for linha in range(2, ws.max_row + 1):
+                    nome_coluna = str(
+                        nome_coluna
+                    ).strip()
+
+                    # Marca Cotada não é preço.
+
+                    if (
+                        " Marca Cotada"
+                        in nome_coluna
+                    ):
+                        continue
+
+                    # Colunas fixas não são preço.
+
+                    if (
+                        nome_coluna
+                        in colunas_que_nao_sao_preco
+                    ):
+                        continue
+
+                    colunas_preco.append(
+                        coluna
+                    )
+
+                # =================================================
+                # PINTA O MENOR PREÇO DE CADA ITEM
+                # =================================================
+
+                for linha in range(
+                    2,
+                    ws.max_row + 1
+                ):
+
                     precos = []
 
                     for coluna in colunas_preco:
+
                         celula = ws.cell(
                             row=linha,
                             column=coluna
@@ -135,8 +185,16 @@ def exportar_excel(
                             continue
 
                         try:
-                            valor_numerico = float(valor)
-                        except (ValueError, TypeError):
+
+                            valor_numerico = float(
+                                valor
+                            )
+
+                        except (
+                            ValueError,
+                            TypeError
+                        ):
+
                             continue
 
                         if valor_numerico <= 0:
@@ -154,8 +212,13 @@ def exportar_excel(
 
                     menor_preco = min(
                         preco
-                        for coluna, preco in precos
+                        for coluna, preco
+                        in precos
                     )
+
+                    # ---------------------------------------------
+                    # PINTA TODOS OS EMPATES
+                    # ---------------------------------------------
 
                     for coluna, preco in precos:
 
@@ -168,13 +231,22 @@ def exportar_excel(
                                 column=coluna
                             )
 
-                            celula.fill = preenchimento_menor
-                            celula.font = fonte_menor
+                            celula.fill = (
+                                preenchimento_menor
+                            )
 
-                # AJUSTA LARGURA
+                            celula.font = (
+                                fonte_menor
+                            )
+
+                # =================================================
+                # AJUSTA LARGURA DAS COLUNAS
+                # =================================================
+
                 for coluna in ws.columns:
 
                     maior = 0
+
                     letra = coluna[0].column_letter
 
                     for celula in coluna:
@@ -182,7 +254,9 @@ def exportar_excel(
                         if celula.value is not None:
 
                             tamanho = len(
-                                str(celula.value)
+                                str(
+                                    celula.value
+                                )
                             )
 
                             if tamanho > maior:
@@ -197,19 +271,35 @@ def exportar_excel(
 
                 ws.freeze_panes = "A2"
 
+                # =================================================
                 # RESUMO
-                ws_resumo = writer.sheets["Resumo"]
+                # =================================================
+
+                ws_resumo = writer.sheets[
+                    "Resumo"
+                ]
 
                 for celula in ws_resumo[1]:
 
-                    celula.fill = preenchimento_cabecalho
-                    celula.font = fonte_cabecalho
+                    celula.fill = (
+                        preenchimento_cabecalho
+                    )
+
+                    celula.font = (
+                        fonte_cabecalho
+                    )
+
                     celula.alignment = Alignment(
                         horizontal="center"
                     )
 
-                ws_resumo.column_dimensions["A"].width = 35
-                ws_resumo.column_dimensions["B"].width = 25
+                ws_resumo.column_dimensions[
+                    "A"
+                ].width = 35
+
+                ws_resumo.column_dimensions[
+                    "B"
+                ].width = 25
 
                 for linha in range(
                     2,
@@ -219,7 +309,9 @@ def exportar_excel(
                     ws_resumo.cell(
                         row=linha,
                         column=2
-                    ).number_format = 'R$ #,##0.00'
+                    ).number_format = (
+                        'R$ #,##0.00'
+                    )
 
                 ws_resumo.freeze_panes = "A2"
 
